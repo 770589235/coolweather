@@ -21,6 +21,7 @@ import com.ivpoints.application.MyApplication;
 import com.ivpoints.bean.City;
 import com.ivpoints.bean.County;
 import com.ivpoints.bean.Province;
+import com.ivpoints.coolweather.MainActivity;
 import com.ivpoints.coolweather.R;
 import com.ivpoints.coolweather.WeatherActivity;
 import com.ivpoints.db.MyDBHelper;
@@ -89,8 +90,15 @@ public class ChooseAreaFragment extends Fragment {
                     queryCounties();
                 }else if(currentLevel==LEVEL_COUNTY){
                     String weatherId=countyList.get(position).getWeatherId();
-                    startActivity(new Intent(getActivity(), WeatherActivity.class).putExtra("weather_id", weatherId));
-                    getActivity().finish();
+                    if(getActivity()instanceof MainActivity){
+                        startActivity(new Intent(getActivity(), WeatherActivity.class).putExtra("weather_id", weatherId));
+                        getActivity().finish();
+                    }else if(getActivity() instanceof WeatherActivity){
+                        WeatherActivity activity= (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipe.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+                    }
                 }
             }
         });
@@ -129,7 +137,6 @@ public class ChooseAreaFragment extends Fragment {
                 province.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 province.setProvinceCode(cursor.getInt(cursor.getColumnIndex("provinceCode")));
                 province.setProvinceName(cursor.getString(cursor.getColumnIndex("provinceName")));
-                LogUtil.d(province.getId()+"..."+province.getProvinceCode()+"..."+province.getProvinceName());
                 provinceList.add(province);
                 datalist.add(province.getProvinceName());
             }while(cursor.moveToNext());
@@ -239,7 +246,9 @@ public class ChooseAreaFragment extends Fragment {
         SQLiteDatabase database=new MyDBHelper(MyApplication.getContext()).getWritableDatabase();
         Cursor cursor=database.rawQuery("select * from County where cityId = ? ", new String[]{String.valueOf(selectedCity.getId())});
         County county;
-        if(countyList==null){
+        if(countyList!=null && countyList.size()>0){
+            countyList.clear();
+        }else{
             countyList=new ArrayList<>();
         }
         if(cursor.moveToFirst()){

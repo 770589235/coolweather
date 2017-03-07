@@ -9,7 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
-
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <ScrollView
         android:id="@+id/weather_layout"
         android:layout_width="match_parent"
@@ -35,5 +42,14 @@
             <include layout="@layout/suggestion"/>
         </LinearLayout>
     </ScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>
 
+   <fragment
+       android:id="@+id/choose"
+       android:name="com.ivpoints.fragment.ChooseAreaFragment"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_gravity="start"/>
+
+</android.support.v4.widget.DrawerLayout>
 </FrameLayout>
