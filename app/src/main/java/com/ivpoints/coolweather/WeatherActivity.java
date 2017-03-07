@@ -1,5 +1,6 @@
 package com.ivpoints.coolweather;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.ivpoints.bean.Forecast;
 import com.ivpoints.bean.Weather;
+import com.ivpoints.service.AutoUpdateService;
 import com.ivpoints.util.HttpUtil;
 import com.ivpoints.util.LogUtil;
 import com.ivpoints.util.Utility;
@@ -50,7 +52,7 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView sport;
     private ImageView iv;
     public SwipeRefreshLayout swipe;
-    private String weatherId;
+    public String weatherId;
     public DrawerLayout drawerLayout;
     private Button nav;
 
@@ -197,5 +199,12 @@ public class WeatherActivity extends AppCompatActivity {
         carwash.setText(weather.suggestion.carWash.info);
         sport.setText(weather.suggestion.sport.info);
         scrollView.setVisibility(View.VISIBLE);
+
+
+        if(weather!=null && "ok".equals(weather.status)){
+            startService(new Intent(this, AutoUpdateService.class));
+        }else{
+            Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
+        }
     }
 }
