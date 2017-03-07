@@ -2,7 +2,9 @@ package com.ivpoints.util;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.gson.Gson;
 import com.ivpoints.application.MyApplication;
+import com.ivpoints.bean.Weather;
 import com.ivpoints.db.MyDBHelper;
 
 import org.json.JSONArray;
@@ -85,5 +87,21 @@ public class Utility {
         return false;
     }
 
+
+    /**
+     * 将返回的JSON数据解析成weather实体类
+     */
+
+    public static Weather handleWeatherResponse(String response){
+        try {
+            JSONObject jsonObject=new JSONObject(response);
+            JSONArray jsonArray=jsonObject.getJSONArray("HeWeather");
+            String weatherContent=jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent, Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

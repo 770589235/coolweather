@@ -1,6 +1,7 @@
 package com.ivpoints.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.ivpoints.bean.City;
 import com.ivpoints.bean.County;
 import com.ivpoints.bean.Province;
 import com.ivpoints.coolweather.R;
+import com.ivpoints.coolweather.WeatherActivity;
 import com.ivpoints.db.MyDBHelper;
 import com.ivpoints.util.HttpUtil;
 import com.ivpoints.util.LogUtil;
@@ -85,6 +87,10 @@ public class ChooseAreaFragment extends Fragment {
                 }else if(currentLevel==LEVEL_CITY){
                     selectedCity=cityList.get(position);
                     queryCounties();
+                }else if(currentLevel==LEVEL_COUNTY){
+                    String weatherId=countyList.get(position).getWeatherId();
+                    startActivity(new Intent(getActivity(), WeatherActivity.class).putExtra("weather_id", weatherId));
+                    getActivity().finish();
                 }
             }
         });
